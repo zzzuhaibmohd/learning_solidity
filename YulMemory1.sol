@@ -6,7 +6,7 @@ contract UsingMemory {
         assembly {
             mstore(0x00, 2)
             mstore(0x20, 4)
-            return(0x00, 0x40)
+            return(0x00, 0x40) //return the range of memory location, in this case - first 64 bytes
         }
     }
 
@@ -19,7 +19,7 @@ contract UsingMemory {
             if iszero(
                 eq(caller(), 0xAb8483F64d9C6d1EcF9b849Ae677dD3315835cb2)
             ) {
-                revert(0, 0)
+                revert(0, 0)//using revert instead of return to cancel the tx
             }
         }
     }
@@ -43,6 +43,6 @@ contract UsingMemory {
 
             mstore(0x00, keccak256(freeMemoryPointer, 0x60))
             return(0x00, 0x60)
-        }
+        } //rewatch the video
     }
 }
