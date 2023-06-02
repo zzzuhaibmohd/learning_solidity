@@ -1,8 +1,7 @@
 // SPDX-License-Identifier: GPL-3.0
 pragma solidity 0.8.18;
 
-
-//Four Important instructions
+//Four Important instructions in memory
 //1. mload
 //2. mstore
 //3. mstore8
@@ -19,14 +18,15 @@ contract Memory {
     function highAccess() external pure {
         assembly {
             // pop just throws away the return value
+            // this is because we are trying to read a very high location in memory
             pop(mload(0xffffffffffffffff))
         }
     }
 
     function mstore8() external pure {
         assembly {
-            mstore8(0x00, 7)
-            mstore(0x00, 7)
+            mstore8(0x00, 7) //7
+            mstore(0x00, 7)  //0..........00007
         }
     }
 
@@ -42,7 +42,7 @@ contract Memory {
             x40 := mload(0x40)
         }
         emit MemoryPointer(x40);
-    }
+    }//rewatch the video
 
     function memPointerV2() external {
         bytes32 x40;
@@ -79,7 +79,7 @@ contract Memory {
             x40 := mload(0x40)
         }
         emit MemoryPointer(x40);
-    }
+    }//rewatch the video
 
     function abiEncode() external {
         bytes32 x40;
@@ -89,7 +89,7 @@ contract Memory {
         emit MemoryPointer(x40);
         abi.encode(uint256(5), uint256(19));
         assembly {
-            x40 := mload(0x40)
+            x40 := mload(0x40)//output wont be packed
         }
         emit MemoryPointer(x40);
     }
@@ -113,7 +113,7 @@ contract Memory {
             x40 := mload(0x40)
         }
         emit MemoryPointer(x40);
-        abi.encodePacked(uint256(5), uint128(19));
+        abi.encodePacked(uint256(5), uint128(19)); //output be packed since uint128(19), uses only 16 bytes instead of 32 bytes of memory
         assembly {
             x40 := mload(0x40)
         }
@@ -130,7 +130,7 @@ contract Memory {
         assembly {
             location := arr
             len := mload(arr)
-            valueAtIndex0 := mload(add(arr, 0x20))
+            valueAtIndex0 := mload(add(arr, 0x20)) //directly read from index 0
             valueAtIndex1 := mload(add(arr, 0x40))
             // ...
         }
@@ -153,5 +153,5 @@ contract Memory {
 
     function unpacked() external {
         uint8[] memory bar = foo;
-    }
+    }//rewatch the video
 }
