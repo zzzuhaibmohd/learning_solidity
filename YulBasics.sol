@@ -80,7 +80,7 @@ contract IfComparison {
 
     function bitFlip() external pure returns (bytes32 result) {
         assembly {
-            result := not(2) //do not use not for nrgation, it will flip all the bits
+            result := not(2) //do not use not for negation, it will flip all the bits
         }
     }
 
