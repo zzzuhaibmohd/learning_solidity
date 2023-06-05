@@ -19,6 +19,7 @@ contract Memory {
         assembly {
             // pop just throws away the return value
             // this is because we are trying to read a very high location in memory
+            //uses more than 30M block gas limit
             pop(mload(0xffffffffffffffff))
         }
     }
