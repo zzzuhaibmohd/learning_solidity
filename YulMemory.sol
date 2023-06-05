@@ -6,6 +6,13 @@ pragma solidity 0.8.18;
 //2. mstore
 //3. mstore8
 //4. msize
+
+// [0x..00-0x..20] & [0x..20-0x..40] -> used as scratch space - ephemeral space
+// [0x..40-0x..60] as free memory pointer - used while writing something new to memory
+// [0x..60-0x..80] is kept empty
+// the action begins at [0x..80]
+//
+
 contract Memory {
     struct Point {
         uint256 x;
@@ -43,7 +50,7 @@ contract Memory {
             x40 := mload(0x40)
         }
         emit MemoryPointer(x40);
-    }//rewatch the video
+    }// 0xc0 - 0x80 = 64 (2 slots of 32 bytes for x and y)
 
     function memPointerV2() external {
         bytes32 x40;
@@ -80,7 +87,7 @@ contract Memory {
             x40 := mload(0x40)
         }
         emit MemoryPointer(x40);
-    }//rewatch the video
+    }// 0xc0 - 0x80 = 64 (2 slots of 32 bytes for x and y)
 
     function abiEncode() external {
         bytes32 x40;
@@ -93,7 +100,10 @@ contract Memory {
             x40 := mload(0x40)//output wont be packed
         }
         emit MemoryPointer(x40);
-    }
+    } //abi.encode needs to know the length of the arguments in this case 2 and stores it in one of the slots
+      // it takes up 3 slots
+      
+    
 
     function abiEncode2() external {
         bytes32 x40;
@@ -106,7 +116,7 @@ contract Memory {
             x40 := mload(0x40)
         }
         emit MemoryPointer(x40);
-    }
+    } // even though uint128, abi.encode packs it into 32bytes 
 
     function abiEncodePacked() external {
         bytes32 x40;
@@ -119,7 +129,7 @@ contract Memory {
             x40 := mload(0x40)
         }
         emit MemoryPointer(x40);
-    }
+    } // abi.encodePacked uses 16bytes for uint128
 
     event Debug(bytes32, bytes32, bytes32, bytes32);
 
@@ -148,11 +158,11 @@ contract Memory {
         }
         uint256[1] memory bar = [uint256(6)];
         return foo[0];
-    }
+    }//foo gets overwritten by bar due to overwritting the memory
 
     uint8[] foo = [1, 2, 3, 4, 5, 6];
 
     function unpacked() external {
         uint8[] memory bar = foo;
-    }//rewatch the video
+    }//will load each uint8 in 32 bytes slot
 }
