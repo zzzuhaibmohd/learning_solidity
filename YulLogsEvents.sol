@@ -30,7 +30,7 @@ contract Log {
                 signature
             := 0x113cea0e4d6903d772af04edb841b17a164bff0f0d88609aedd1c4ac9b0c15c2
             mstore(0x00, 1)
-            log2(0, 0x20, signature, 5)
+            log2(0, 0x20, signature, 5) //reference to memory for non indexed parameter
         }
     }
 
